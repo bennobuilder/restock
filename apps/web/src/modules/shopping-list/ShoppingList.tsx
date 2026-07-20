@@ -1,5 +1,5 @@
 import type { CallbackEvent } from '@shopify/polaris-types';
-import { useFeatureState } from 'feature-react/state';
+import { useCompute, useFeatureState } from 'feature-react/state';
 import React from 'react';
 import { useConfetti } from '@/hooks';
 import { cn } from '@/lib';
@@ -8,12 +8,17 @@ import { ShoppingListCx, type TShoppingItem } from './ShoppingListCx';
 export const ShoppingList: React.FC<TShoppingListProps> = (props) => {
 	const { cx } = props;
 	const items = useFeatureState(cx.$items);
+	const errorMessage = useFeatureState(cx.$errorMessage);
 	const boughtItemCount = items.filter((item) => item.bought).length;
 	const triggerConfetti = useConfetti();
 
 	const handleItemBoughtChange = React.useCallback(
-		(itemId: string, bought: boolean) => {
-			cx.setItemBought(itemId, bought);
+		async (itemId: string, bought: boolean) => {
+			const [isItemOk, itemErr] = await cx.setItemBought(itemId, bought);
+			if (!isItemOk) {
+				console.error('Failed to update shopping item', itemErr);
+				return;
+			}
 
 			if (bought && cx.areAllItemsBought()) {
 				triggerConfetti();
@@ -22,9 +27,25 @@ export const ShoppingList: React.FC<TShoppingListProps> = (props) => {
 		[cx, triggerConfetti]
 	);
 
+	const handleErrorDismiss = React.useCallback(() => {
+		cx.clearError();
+	}, [cx]);
+
 	return (
 		<s-section heading="Shopping list">
 			<AddItemForm cx={cx} />
+			{errorMessage != null ? (
+				<div className="mt-4">
+					<s-banner
+						dismissible
+						heading="The shopping list couldn't be updated"
+						tone="critical"
+						onDismiss={handleErrorDismiss}
+					>
+						<s-paragraph>{errorMessage}</s-paragraph>
+					</s-banner>
+				</div>
+			) : null}
 
 			<div className="mt-5">
 				{items.length > 0 ? (
@@ -66,7 +87,7 @@ interface TShoppingListProps {
 const AddItemForm: React.FC<TAddItemFormProps> = (props) => {
 	const { cx } = props;
 	const draftName = useFeatureState(cx.$draftName);
-	const isAddDisabled = !draftName.trim().length;
+	const isAdding = useFeatureState(cx.$isAdding);
 
 	const handleDraftInput = React.useCallback(
 		(event: CallbackEvent<'s-text-field'>) => {
@@ -76,9 +97,12 @@ const AddItemForm: React.FC<TAddItemFormProps> = (props) => {
 	);
 
 	const handleSubmit = React.useCallback(
-		(event: React.SubmitEvent<HTMLFormElement>) => {
+		async (event: React.SubmitEvent<HTMLFormElement>) => {
 			event.preventDefault();
-			cx.addItem();
+			const [isItemOk, itemErr] = await cx.addItem();
+			if (!isItemOk) {
+				console.error('Failed to add shopping item', itemErr);
+			}
 		},
 		[cx]
 	);
@@ -88,6 +112,7 @@ const AddItemForm: React.FC<TAddItemFormProps> = (props) => {
 			<div className="min-w-0 flex-1">
 				<s-text-field
 					autocomplete="off"
+					disabled={isAdding}
 					label="Product name"
 					labelAccessibilityVisibility="exclusive"
 					name="productName"
@@ -96,7 +121,13 @@ const AddItemForm: React.FC<TAddItemFormProps> = (props) => {
 					onInput={handleDraftInput}
 				/>
 			</div>
-			<s-button disabled={isAddDisabled} icon="plus" type="submit" variant="primary">
+			<s-button
+				disabled={isAdding || !draftName.trim().length}
+				icon="plus"
+				loading={isAdding}
+				type="submit"
+				variant="primary"
+			>
 				Add item
 			</s-button>
 		</form>
@@ -109,23 +140,30 @@ interface TAddItemFormProps {
 
 const ShoppingItemRow: React.FC<TShoppingItemRowProps> = (props) => {
 	const { cx, item, onItemBoughtChange } = props;
+	const isPending = useCompute(cx.$pendingItemIds, (itemIds) => itemIds.includes(item.id), [
+		item.id
+	]);
 
 	const handleBoughtChange = React.useCallback(
 		(event: CallbackEvent<'s-checkbox'>) => {
-			onItemBoughtChange(item.id, event.currentTarget.checked);
+			void onItemBoughtChange(item.id, event.currentTarget.checked);
 		},
 		[item.id, onItemBoughtChange]
 	);
 
-	const handleDelete = React.useCallback(() => {
-		cx.deleteItem(item.id);
+	const handleDelete = React.useCallback(async () => {
+		const [isItemDeleted, itemDeleteErr] = await cx.deleteItem(item.id);
+		if (!isItemDeleted) {
+			console.error('Failed to delete shopping item', itemDeleteErr);
+		}
 	}, [cx, item.id]);
 
 	return (
-		<li className="group flex items-center gap-3 px-3 py-3">
+		<li aria-busy={isPending} className="group flex items-center gap-3 px-3 py-3">
 			<s-checkbox
 				accessibilityLabel={`Mark ${item.name} as bought`}
 				checked={item.bought}
+				disabled={isPending}
 				onChange={handleBoughtChange}
 			/>
 			<span
@@ -139,6 +177,7 @@ const ShoppingItemRow: React.FC<TShoppingItemRowProps> = (props) => {
 			<div className="sm:opacity-0 sm:transition-opacity sm:group-hover:opacity-100 sm:focus-within:opacity-100">
 				<s-button
 					accessibilityLabel={`Remove ${item.name}`}
+					disabled={isPending}
 					icon="x"
 					tone="neutral"
 					variant="tertiary"
@@ -152,5 +191,5 @@ const ShoppingItemRow: React.FC<TShoppingItemRowProps> = (props) => {
 interface TShoppingItemRowProps {
 	cx: ShoppingListCx;
 	item: TShoppingItem;
-	onItemBoughtChange: (itemId: string, bought: boolean) => void;
+	onItemBoughtChange: (itemId: string, bought: boolean) => Promise<void>;
 }

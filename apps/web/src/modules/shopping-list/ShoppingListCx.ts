@@ -12,7 +12,7 @@ export class ShoppingListCx {
 		}
 
 		const item: TShoppingItem = {
-			_id: crypto.randomUUID(),
+			id: crypto.randomUUID(),
 			name,
 			bought: false,
 			createdAt: new Date().toISOString()
@@ -24,7 +24,7 @@ export class ShoppingListCx {
 
 	public setItemBought(itemId: string, bought: boolean): void {
 		this.$items.set((items) =>
-			items.map((item) => (item._id === itemId ? { ...item, bought } : item))
+			items.map((item) => (item.id === itemId ? { ...item, bought } : item))
 		);
 	}
 
@@ -34,12 +34,12 @@ export class ShoppingListCx {
 	}
 
 	public deleteItem(itemId: string): void {
-		this.$items.set((items) => items.filter((item) => item._id !== itemId));
+		this.$items.set((items) => items.filter((item) => item.id !== itemId));
 	}
 }
 
 export interface TShoppingItem {
-	_id: string;
+	id: string;
 	name: string;
 	bought: boolean;
 	createdAt: string;
@@ -52,7 +52,7 @@ function createOnboardingItems(): TShoppingItem[] {
 		'Mark an item as bought',
 		'Delete an item you no longer need'
 	].map((name) => ({
-		_id: crypto.randomUUID(),
+		id: crypto.randomUUID(),
 		bought: false,
 		createdAt,
 		name

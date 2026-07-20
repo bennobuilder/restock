@@ -6,6 +6,50 @@
 	},
 	"components": {
 		"schemas": {
+			"ShoppingItem": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string",
+						"example": "507f1f77bcf86cd799439011"
+					},
+					"name": {
+						"type": "string",
+						"example": "Butter"
+					},
+					"bought": {
+						"type": "boolean",
+						"example": false
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time",
+						"example": "2026-07-20T12:00:00.000Z"
+					}
+				},
+				"required": ["id", "name", "bought", "createdAt"]
+			},
+			"CreateShoppingItemRequest": {
+				"type": "object",
+				"properties": {
+					"name": {
+						"type": "string",
+						"minLength": 1,
+						"example": "Butter"
+					}
+				},
+				"required": ["name"]
+			},
+			"UpdateShoppingItemRequest": {
+				"type": "object",
+				"properties": {
+					"bought": {
+						"type": "boolean",
+						"example": true
+					}
+				},
+				"required": ["bought"]
+			},
 			"ErrorResponse": {
 				"type": "object",
 				"properties": {
@@ -89,6 +133,196 @@
 		}
 	},
 	"paths": {
+		"/items": {
+			"get": {
+				"tags": ["items"],
+				"summary": "List shopping items",
+				"operationId": "listItems",
+				"responses": {
+					"200": {
+						"description": "The shopping items",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/ShoppingItem"
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "The shopping items could not be retrieved",
+						"content": {
+							"application/problem+json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": ["items"],
+				"summary": "Create a shopping item",
+				"operationId": "createItem",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateShoppingItemRequest"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "The shopping item was created",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ShoppingItem"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "The request is invalid",
+						"content": {
+							"application/problem+json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "The shopping item could not be created",
+						"content": {
+							"application/problem+json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/items/{id}": {
+			"parameters": [
+				{
+					"name": "id",
+					"in": "path",
+					"required": true,
+					"description": "The shopping item's MongoDB ObjectId",
+					"schema": {
+						"type": "string",
+						"pattern": "^[0-9a-fA-F]{24}$"
+					}
+				}
+			],
+			"put": {
+				"tags": ["items"],
+				"summary": "Update a shopping item's bought status",
+				"operationId": "updateItem",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateShoppingItemRequest"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "The shopping item was updated",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ShoppingItem"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "The request is invalid",
+						"content": {
+							"application/problem+json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "The shopping item was not found",
+						"content": {
+							"application/problem+json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "The shopping item could not be updated",
+						"content": {
+							"application/problem+json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"tags": ["items"],
+				"summary": "Delete a shopping item",
+				"operationId": "deleteItem",
+				"responses": {
+					"204": {
+						"description": "The shopping item was deleted"
+					},
+					"400": {
+						"description": "The shopping item id is invalid",
+						"content": {
+							"application/problem+json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "The shopping item was not found",
+						"content": {
+							"application/problem+json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "The shopping item could not be deleted",
+						"content": {
+							"application/problem+json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
 		"/v1/health": {
 			"get": {
 				"tags": ["health"],

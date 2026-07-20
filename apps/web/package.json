@@ -25,16 +25,20 @@
 		"update:latest": "pnpm update --latest"
 	},
 	"dependencies": {
+		"@repo/api": "workspace:*",
 		"@tanstack/react-router": "^1.170.18",
 		"@tanstack/react-router-devtools": "^1.167.0",
 		"@tanstack/react-start": "^1.168.28",
 		"canvas-confetti": "^1.9.4",
 		"clsx": "^2.1.1",
+		"feature-fetch": "^0.1.1",
 		"feature-react": "^0.1.0",
 		"feature-state": "^0.1.0",
 		"react": "^19.2.7",
 		"react-dom": "^19.2.7",
-		"tailwind-merge": "^3.6.0"
+		"tailwind-merge": "^3.6.0",
+		"validatenv": "^0.1.0",
+		"zod": "^4.4.3"
 	},
 	"devDependencies": {
 		"@blgc/config": "^0.1.0",

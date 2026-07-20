@@ -41,7 +41,7 @@ export const ShoppingList: React.FC<TShoppingListProps> = (props) => {
 									<ShoppingItemRow
 										cx={cx}
 										item={item}
-										key={item._id}
+										key={item.id}
 										onItemBoughtChange={handleItemBoughtChange}
 									/>
 								))}
@@ -112,14 +112,14 @@ const ShoppingItemRow: React.FC<TShoppingItemRowProps> = (props) => {
 
 	const handleBoughtChange = React.useCallback(
 		(event: CallbackEvent<'s-checkbox'>) => {
-			onItemBoughtChange(item._id, event.currentTarget.checked);
+			onItemBoughtChange(item.id, event.currentTarget.checked);
 		},
-		[item._id, onItemBoughtChange]
+		[item.id, onItemBoughtChange]
 	);
 
 	const handleDelete = React.useCallback(() => {
-		cx.deleteItem(item._id);
-	}, [cx, item._id]);
+		cx.deleteItem(item.id);
+	}, [cx, item.id]);
 
 	return (
 		<li className="group flex items-center gap-3 px-3 py-3">

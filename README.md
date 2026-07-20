@@ -2,8 +2,8 @@
   <img
     alt="Restock app logo"
     src="./.github/assets/logo.png"
-    width="150"
-    height="150"
+    width="120"
+    height="120"
   >
 </p>
 

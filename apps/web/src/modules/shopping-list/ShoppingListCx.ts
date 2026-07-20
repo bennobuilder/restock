@@ -1,9 +1,14 @@
-import { createState } from 'feature-state';
+import type { apiV1 } from '@repo/api/openapi';
+import { createState, type TState } from 'feature-state';
 import React from 'react';
 
 export class ShoppingListCx {
 	public readonly $draftName = createState('');
-	public readonly $items = createState<TShoppingItem[]>(createOnboardingItems());
+	public readonly $items: TState<TShoppingItem[]>;
+
+	constructor(initialItems: TShoppingItem[]) {
+		this.$items = createState(initialItems);
+	}
 
 	public addItem(): void {
 		const name = this.$draftName.get().trim();
@@ -38,27 +43,8 @@ export class ShoppingListCx {
 	}
 }
 
-export interface TShoppingItem {
-	id: string;
-	name: string;
-	bought: boolean;
-	createdAt: string;
-}
+export type TShoppingItem = apiV1.components['schemas']['ShoppingItem'];
 
-function createOnboardingItems(): TShoppingItem[] {
-	const createdAt = new Date().toISOString();
-	return [
-		'Add your first restock item',
-		'Mark an item as bought',
-		'Delete an item you no longer need'
-	].map((name) => ({
-		id: crypto.randomUUID(),
-		bought: false,
-		createdAt,
-		name
-	}));
-}
-
-export function useCreateShoppingListCx(): ShoppingListCx {
-	return React.useMemo(() => new ShoppingListCx(), []);
+export function useCreateShoppingListCx(initialItems: TShoppingItem[]): ShoppingListCx {
+	return React.useMemo(() => new ShoppingListCx(initialItems), [initialItems]);
 }

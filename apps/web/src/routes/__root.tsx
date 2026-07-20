@@ -16,7 +16,8 @@ export const Route = createRootRoute({
 				rel: 'stylesheet',
 				href: styles
 			}
-		]
+		],
+		scripts: [{ src: 'https://cdn.shopify.com/shopifycloud/polaris.js' }]
 	}),
 	shellComponent: ShellComponent
 });

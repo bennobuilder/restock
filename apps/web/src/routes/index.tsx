@@ -15,6 +15,9 @@ function RouteComponent() {
 				<p className="mt-3 text-base leading-7 text-black/60">
 					Your shopping list will live here.
 				</p>
+				<div className="mt-5">
+					<s-button variant="primary">Add item</s-button>
+				</div>
 			</section>
 		</main>
 	);

@@ -2,7 +2,13 @@
 	"name": "restock",
 	"private": true,
 	"description": "A merchant shopping list built with React, Express, TypeScript and MongoDB",
-	"keywords": ["react", "express", "mongodb", "typescript", "shopping-list"],
+	"keywords": [
+		"react",
+		"express",
+		"mongodb",
+		"typescript",
+		"shopping-list"
+	],
 	"homepage": "https://github.com/bennobuilder/restock#readme",
 	"bugs": {
 		"url": "https://github.com/bennobuilder/restock/issues"
@@ -27,7 +33,6 @@
 		"@blgc/config": "^0.1.0",
 		"eslint": "^10.7.0",
 		"prettier": "^3.9.5",
-		"rollup": "^4.62.2",
 		"shx": "^0.4.0",
 		"turbo": "^2.10.5",
 		"typescript": "^6.0.3",

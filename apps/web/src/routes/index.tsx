@@ -1,24 +1,25 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { appConfig } from '@/environment';
+import { ShoppingList, useCreateShoppingListCx } from '@/modules/shopping-list';
 
 export const Route = createFileRoute('/')({
 	component: RouteComponent
 });
 
 function RouteComponent() {
+	const cx = useCreateShoppingListCx();
+
 	return (
-		<main className="flex min-h-screen items-center px-6 py-16">
-			<section className="mx-auto w-full max-w-3xl rounded-3xl border border-black/10 bg-white/80 px-7 py-6 backdrop-blur-sm">
-				<h1 className="text-3xl font-semibold tracking-normal text-black sm:text-4xl">
-					Hello, {appConfig.name}.
-				</h1>
-				<p className="mt-3 text-base leading-7 text-black/60">
-					Your shopping list will live here.
+		<main className="mx-auto min-h-screen w-full max-w-3xl py-10 sm:px-6 sm:py-16">
+			<header className="mb-6 px-4 sm:px-0">
+				<img alt="" className="mb-5 size-12 rounded-xl" src="/logo192.png" />
+				<h1 className="text-3xl font-bold tracking-tight">{appConfig.name}</h1>
+				<p className="mt-2 max-w-xl text-sm leading-5 text-black/60">
+					Keep track of the products and supplies your business needs to restock.
 				</p>
-				<div className="mt-5">
-					<s-button variant="primary">Add item</s-button>
-				</div>
-			</section>
+			</header>
+
+			<ShoppingList cx={cx} />
 		</main>
 	);
 }

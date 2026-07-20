@@ -71,7 +71,7 @@
 					},
 					"instance": {
 						"type": "string",
-						"example": "/v1/health"
+						"example": "/health"
 					},
 					"code": {
 						"type": "string",
@@ -323,7 +323,7 @@
 				}
 			}
 		},
-		"/v1/health": {
+		"/health": {
 			"get": {
 				"tags": ["health"],
 				"summary": "Check API health",

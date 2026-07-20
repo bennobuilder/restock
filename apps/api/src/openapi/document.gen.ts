@@ -81,7 +81,7 @@ export const openApiDocument = {
 					},
 					"instance": {
 						"type": "string",
-						"example": "/v1/health"
+						"example": "/health"
 					},
 					"code": {
 						"type": "string",
@@ -365,7 +365,7 @@ export const openApiDocument = {
 				}
 			}
 		},
-		"/v1/health": {
+		"/health": {
 			"get": {
 				"tags": [
 					"health"

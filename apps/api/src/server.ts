@@ -5,7 +5,17 @@ await connectDatabase();
 
 const api = createApi();
 const port = 8787;
-const server = api.listen(port, () => {
+const server = api.listen(port, (error) => {
+	if (error != null) {
+		console.error('Failed to start the Restock API server', error);
+		process.exitCode = 1;
+
+		void disconnectDatabase().catch((databaseError: unknown) => {
+			console.error('Failed to disconnect the Restock database', databaseError);
+		});
+		return;
+	}
+
 	console.log(`Restock API is running at http://localhost:${port.toString()}`);
 });
 

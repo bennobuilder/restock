@@ -43,7 +43,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v1/health": {
+    "/health": {
         parameters: {
             query?: never;
             header?: never;
@@ -94,7 +94,7 @@ export interface components {
             status: number;
             /** @example The request could not be validated */
             detail: string;
-            /** @example /v1/health */
+            /** @example /health */
             instance: string;
             /** @example #ERR_VALIDATION_FAILED */
             code: string;

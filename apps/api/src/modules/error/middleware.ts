@@ -48,6 +48,8 @@ export const errorMiddleware: ErrorRequestHandler = (error, request, response, n
 			detail: error.expose === true ? error.message : title
 		};
 	} else {
+		console.error('Unexpected Restock API error', error);
+
 		errorResponse = {
 			code: '#ERR_INTERNAL_SERVER',
 			status: 500,

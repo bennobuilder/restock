@@ -161,7 +161,7 @@ const ShoppingItemRow: React.FC<TShoppingItemRowProps> = (props) => {
 	return (
 		<li aria-busy={isPending} className="group flex items-center gap-3 px-3 py-3">
 			<s-checkbox
-				accessibilityLabel={`Mark ${item.name} as bought`}
+				accessibilityLabel={`${item.name} bought`}
 				checked={item.bought}
 				disabled={isPending}
 				onChange={handleBoughtChange}

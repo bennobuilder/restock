@@ -1,7 +1,7 @@
 import type { apiV1 } from '@repo/api/openapi';
-import { Err, Ok, type TResult } from 'feature-fetch';
 import { createState, type TState } from 'feature-state';
 import React from 'react';
+import { Err, Ok, type TResult } from 'tuple-result';
 import { apiClient } from '@/environment';
 
 export class ShoppingListCx {

@@ -1,0 +1,28 @@
+{
+	"$schema": "./node_modules/turbo/schema.json",
+	"ui": "tui",
+	"tasks": {
+		"build": {
+			"dependsOn": ["^build"],
+			"inputs": ["$TURBO_DEFAULT$", ".env*"],
+			"outputs": [".output/**", "dist/**"]
+		},
+		"clean": {
+			"cache": false
+		},
+		"lint": {
+			"dependsOn": ["^lint"]
+		},
+		"start:dev": {
+			"cache": false
+		},
+		"test": {
+			"dependsOn": ["^build"],
+			"inputs": ["$TURBO_DEFAULT$", ".env*"],
+			"cache": false
+		},
+		"update:latest": {
+			"cache": false
+		}
+	}
+}

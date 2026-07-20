@@ -1,0 +1,41 @@
+{
+	"name": "restock",
+	"private": true,
+	"description": "A merchant shopping list built with React, Express, TypeScript and MongoDB",
+	"keywords": ["react", "express", "mongodb", "typescript", "shopping-list"],
+	"homepage": "https://github.com/bennobuilder/restock#readme",
+	"bugs": {
+		"url": "https://github.com/bennobuilder/restock/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/bennobuilder/restock.git"
+	},
+	"license": "AGPL-3.0-only",
+	"author": "@bennobuilder",
+	"scripts": {
+		"build": "turbo run build",
+		"clean": "turbo run clean --force && shx rm -rf .turbo && shx rm -rf node_modules",
+		"format": "prettier --write \"**/*.{ts,tsx,js,jsx,cjs,mjs,md,mdx,json,css,html}\"",
+		"install:clean": "pnpm run clean && pnpm install && pnpm build",
+		"lint": "turbo run lint",
+		"lint:fix": "turbo run lint --force -- --fix",
+		"test": "turbo run test",
+		"update:latest": "turbo run update:latest --force --concurrency=1 && pnpm update --latest '!typescript' && pnpm build"
+	},
+	"devDependencies": {
+		"@blgc/config": "^0.1.0",
+		"eslint": "^10.7.0",
+		"prettier": "^3.9.5",
+		"rollup": "^4.62.2",
+		"shx": "^0.4.0",
+		"turbo": "^2.10.5",
+		"typescript": "^6.0.3",
+		"vite": "^8.1.5",
+		"vitest": "^4.1.10"
+	},
+	"packageManager": "pnpm@11.15.0",
+	"engines": {
+		"node": ">=24"
+	}
+}

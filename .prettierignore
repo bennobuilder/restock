@@ -1,0 +1,28 @@
+# Dependencies
+**/node_modules/
+
+# Tooling
+**/.shopify/
+**/.tanstack/
+**/.turbo/
+**/.vite/
+
+# Test artifacts
+**/coverage/
+
+# Build outputs
+**/.build/
+**/.output/
+**/build/
+**/dist/
+**/out/
+
+# Generated source
+**/*.gen.ts
+**/drizzle/
+**/gen/
+**/graphql-env.d.ts
+
+# Local files
+.todo
+.DS_Store
